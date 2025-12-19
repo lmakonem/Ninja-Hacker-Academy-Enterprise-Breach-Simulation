@@ -100,7 +100,7 @@
         {
           "title": "Verify name resolution first",
           "content": "Before adjusting Kerberos, make sure all FQDNs resolve correctly with the `host` command. Kerberos will fail silently if names do not match what the DCs expect.[conversation_history:1]",
-          "hint_penalty": 10,
+          "hint_penalty": 20,
           "order": 0
         }
       ],
