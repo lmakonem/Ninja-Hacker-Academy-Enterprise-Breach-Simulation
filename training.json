@@ -45,7 +45,9 @@
       "hints": [
         {
           "title": "Focus on OS fingerprints",
-          "content": "Use the service and version output to distinguish Windows servers and workstations from other systems.[conversation_history:1]"
+          "content": "Use the service and version output to distinguish Windows servers and workstations from other systems.[conversation_history:1]",
+          "hint_penalty": 10,
+          "order": 0
         }
       ],
       "incorrect_answer_limit": 10,
@@ -70,7 +72,9 @@
       "hints": [
         {
           "title": "Start from the DCs",
-          "content": "Identify domain controllers first using Kerberos/LDAP. Once you know which IPs are DCs, it becomes easier to infer which servers belong to which forest.[conversation_history:1]"
+          "content": "Identify domain controllers first using Kerberos/LDAP. Once you know which IPs are DCs, it becomes easier to infer which servers belong to which forest.[conversation_history:1]",
+          "hint_penalty": 10,
+          "order": 0
         }
       ],
       "incorrect_answer_limit": 10,
@@ -95,7 +99,9 @@
       "hints": [
         {
           "title": "Verify name resolution first",
-          "content": "Before adjusting Kerberos, make sure all FQDNs resolve correctly with the `host` command. Kerberos will fail silently if names do not match what the DCs expect.[conversation_history:1]"
+          "content": "Before adjusting Kerberos, make sure all FQDNs resolve correctly with the `host` command. Kerberos will fail silently if names do not match what the DCs expect.[conversation_history:1]",
+          "hint_penalty": 10,
+          "order": 0
         }
       ],
       "incorrect_answer_limit": 10,
@@ -120,7 +126,9 @@
       "hints": [
         {
           "title": "Think about exposure and trust",
-          "content": "Ask which systems accept untrusted input (like HTTP requests) and which systems are likely to hold user tokens, cached credentials, or mapped shares.[conversation_history:1]"
+          "content": "Ask which systems accept untrusted input (like HTTP requests) and which systems are likely to hold user tokens, cached credentials, or mapped shares.[conversation_history:1]",
+          "hint_penalty": 10,
+          "order": 0
         }
       ],
       "incorrect_answer_limit": 10,
