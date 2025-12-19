@@ -1,0 +1,17 @@
+---
+- name: disable qxl
+  hosts: routers
+  become: yes
+  tasks:
+    - include_role:
+        name: disable-qxl
+      when: ansible_os_family == 'Debian'
+
+- name: configure kali
+  hosts: kali
+  become: yes
+  roles:
+    - role: user-access
+      user_access_username: user
+      user_access_password: Password123
+      user_access_sudoer: true

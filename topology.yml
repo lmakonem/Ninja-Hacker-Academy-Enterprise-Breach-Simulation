@@ -1,0 +1,36 @@
+name: kali-exploration
+
+hosts:
+  - name: kali
+    base_box:
+      image: kali
+      mgmt_user: debian
+    flavor: standard.small
+
+routers:
+  - name: router
+    base_box:
+      image: debian-12-x86_64
+      mgmt_user: debian
+    flavor: standard.small
+
+wan:
+  name: internet-connection
+  cidr: 100.100.100.0/24
+
+networks:
+  - name: kali-network
+    cidr: 10.1.27.0/24
+    accessible_by_user: true
+
+net_mappings:
+  - host: kali
+    network: kali-network
+    ip: 10.1.27.10
+
+router_mappings:
+  - router: router
+    network: kali-network
+    ip: 10.1.27.1
+
+groups: []

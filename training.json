@@ -1,0 +1,138 @@
+{
+  "title": "Kali Linux Exploration",
+  "description": "Introduction to Kali Linux and essential security tools for beginners",
+  "prerequisites": [],
+  "outcomes": [
+    "Navigate the Kali Linux terminal",
+    "Use basic network reconnaissance tools",
+    "Understand Linux file system structure"
+  ],
+  "state": "UNRELEASED",
+  "levels": [
+    {
+      "title": "Welcome to Kali",
+      "level_type": "INFO_LEVEL",
+      "order": 0,
+      "estimated_duration": 0,
+      "minimal_possible_solve_time": null,
+      "content": "# Welcome to Kali Linux Exploration\n\nThis training will introduce you to Kali Linux, a specialized distribution designed for cybersecurity professionals and penetration testers.\n\n## What You'll Learn\n\n| Level | Topic | Type |\n|:---:|---|---|\n| 1 | Welcome | Info |\n| 2 | Get Access | Access |\n| 3 | System Discovery | Training |\n| 4 | Network Tools | Training |\n| 5 | Assessment | Assessment |\n\n## About Kali Linux\n\nKali Linux comes pre-loaded with hundreds of security tools including:\n- Network scanners (nmap)\n- Password crackers (john, hydra)\n- Web application testers (burpsuite)\n- Exploitation frameworks (metasploit)\n\nLet's begin exploring!"
+    },
+    {
+      "title": "Get Access",
+      "level_type": "ACCESS_LEVEL",
+      "order": 1,
+      "estimated_duration": 0,
+      "minimal_possible_solve_time": null,
+      "passkey": "start",
+      "cloud_content": "Your first task is to access the Kali Linux sandbox.\n\n### Sandbox Access\n1. In the topology overview on the right, right-click on **kali**\n2. Click **Open console**\n3. Login with username **user** and password **Password123**\n4. You should see a terminal prompt\n\nOnce you have successfully accessed the terminal, submit the answer **start**.",
+      "local_content": "This sandbox has not been configured for local use."
+    },
+    {
+      "title": "System Discovery",
+      "level_type": "TRAINING_LEVEL",
+      "order": 2,
+      "estimated_duration": 5,
+      "minimal_possible_solve_time": 1,
+      "answer": "kali",
+      "answer_variable_name": null,
+      "content": "Let's start by exploring your Kali system. Every Linux system has a hostname that identifies it on the network.\n\nYour task is to find the **hostname** of your Kali machine using the command line. Submit the hostname as your answer.\n",
+      "solution": "1. Use the command **`hostname`** to display the system's hostname\n2. The output should be **kali**\n3. Submit **kali** as your answer",
+      "solution_penalized": true,
+      "hints": [
+        {
+          "title": "Basic Linux command",
+          "content": "There is a simple command called **hostname** that displays the system's network name. Try running it in your terminal.",
+          "hint_penalty": 10,
+          "order": 0
+        }
+      ],
+      "incorrect_answer_limit": 10,
+      "attachments": [],
+      "max_score": 100,
+      "variant_answers": false,
+      "reference_solution": [],
+      "expected_commands": ["hostname"],
+      "commands_required": true
+    },
+    {
+      "title": "Network Tools",
+      "level_type": "TRAINING_LEVEL",
+      "order": 3,
+      "estimated_duration": 10,
+      "minimal_possible_solve_time": 2,
+      "answer": "10.1.27.1",
+      "answer_variable_name": null,
+      "content": "Kali Linux comes with many pre-installed security tools. Let's explore your network configuration.\n\nYour Kali machine is on the **10.1.27.0/24** network. Use the **ip route** command to find your default gateway IP address. Submit the gateway IP as your answer.\n",
+      "solution": "1. Run **`ip route`** or **`ip route show`**\n2. Look for the line starting with **default via**\n3. The gateway IP is **10.1.27.1**\n4. Submit **10.1.27.1** as your answer",
+      "solution_penalized": true,
+      "hints": [
+        {
+          "title": "Finding the gateway",
+          "content": "Use **`ip route`** to display routing information. Look for the line that says 'default via' - this shows your gateway address.",
+          "hint_penalty": 20,
+          "order": 0
+        }
+      ],
+      "incorrect_answer_limit": 10,
+      "attachments": [],
+      "max_score": 100,
+      "variant_answers": false,
+      "reference_solution": [],
+      "expected_commands": ["ip"],
+      "commands_required": true
+    },
+    {
+      "title": "Knowledge Check",
+      "level_type": "ASSESSMENT_LEVEL",
+      "order": 4,
+      "estimated_duration": 5,
+      "minimal_possible_solve_time": null,
+      "questions": [
+        {
+          "question_type": "MCQ",
+          "text": "What is the primary purpose of Kali Linux?",
+          "points": 100,
+          "penalty": 0,
+          "order": 0,
+          "answer_required": true,
+          "choices": [
+            {
+              "text": "Web development",
+              "correct": false,
+              "order": 0
+            },
+            {
+              "text": "Penetration testing and security auditing",
+              "correct": true,
+              "order": 1
+            },
+            {
+              "text": "Gaming",
+              "correct": false,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "question_type": "FFQ",
+          "text": "What did you find most interesting about Kali Linux?",
+          "points": 0,
+          "penalty": 0,
+          "order": 1,
+          "answer_required": false,
+          "choices": [
+            {
+              "text": "",
+              "correct": true,
+              "order": 0
+            }
+          ]
+        }
+      ],
+      "instructions": "Answer these questions to complete the training.",
+      "assessment_type": "QUESTIONNAIRE"
+    }
+  ],
+  "estimated_duration": 30,
+  "variant_sandboxes": false
+}
