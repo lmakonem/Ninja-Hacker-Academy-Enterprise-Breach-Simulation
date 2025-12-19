@@ -1,49 +1,51 @@
 {
-  "title": "Kali Linux Exploration",
-  "description": "Introduction to Kali Linux and essential security tools for beginners",
+  "title": "Ninja Hacker Academy – Enterprise Breach Simulation",
+  "description": "Red-team style exercise against a mid-size company running two Active Directory forests: the internal training environment academy.ninja.lan and the corporate domain ninja.hack.",
   "prerequisites": [],
   "outcomes": [
-    "Navigate the Kali Linux terminal",
-    "Use basic network reconnaissance tools",
-    "Understand Linux file system structure"
+    "Perform structured reconnaissance against a multi-host Windows/AD environment",
+    "Map business roles to technical assets and domains",
+    "Configure name resolution and Kerberos for multi-forest operations",
+    "Identify realistic entry points and high-value assets",
+    "Plan an attack path towards Domain Admin in both forests"
   ],
   "state": "UNRELEASED",
+  "estimated_duration": 120,
+  "variant_sandboxes": false,
   "levels": [
     {
-      "title": "Welcome to Kali",
+      "title": "Executive Briefing",
       "level_type": "INFO_LEVEL",
       "order": 0,
       "estimated_duration": 0,
       "minimal_possible_solve_time": null,
-      "content": "# Welcome to Kali Linux Exploration\n\nThis training will introduce you to Kali Linux, a specialized distribution designed for cybersecurity professionals and penetration testers.\n\n## What You'll Learn\n\n| Level | Topic | Type |\n|:---:|---|---|\n| 1 | Welcome | Info |\n| 2 | Get Access | Access |\n| 3 | System Discovery | Training |\n| 4 | Network Tools | Training |\n| 5 | Assessment | Assessment |\n\n## About Kali Linux\n\nKali Linux comes pre-loaded with hundreds of security tools including:\n- Network scanners (nmap)\n- Password crackers (john, hydra)\n- Web application testers (burpsuite)\n- Exploitation frameworks (metasploit)\n\nLet's begin exploring!"
+      "content": "# Ninja Hacker Academy – Enterprise Scenario\n\nThe Ninja Hacker Academy (NHA) environment emulates a realistic mid-size company operating two tightly-coupled Active Directory forests.\n\n- **academy.ninja.lan** – an internal training and lab forest used by developers, interns, and \"Ninja Academy\" students.\n- **ninja.hack** – the production corporate forest hosting executives, finance, and security operations.\n\nA web-based \"Ninja Hacker Academy\" portal allows trainees to access internal material and submit assignments. This application runs inside the academy.ninja.lan forest, backed by a shared SQL server and with a trust relationship to ninja.hack.\n\nYour position simulates a red-team operator or external consultant with network access to the academy segment but no valid credentials.\n\n## Network and Assets\n\nThe lab network is **10.2.10.0/23**.\n\nCore assets:\n- **10.2.10.21** – Windows 11 workstation used by an Academy staff member.\n- **10.2.10.30** – `dc01.ninja.hack` – Domain Controller for the corporate forest ninja.hack.\n- **10.2.10.31** – `dc02.academy.ninja.lan` – Domain Controller for the training forest academy.ninja.lan.\n- **10.2.10.32** – `web.academy.ninja.lan` – IIS web server hosting the Ninja Hacker Academy portal.\n- **10.2.10.33** – `sql.academy.ninja.lan` – SQL Server 2019 instance storing training and reporting data.\n- **10.2.10.34** – `share.academy.ninja.lan` – file/application server used by Academy instructors and staff.\n\nAll systems are fully patched, with Microsoft Defender enabled and baseline security controls applied.\n\nFlags represent sensitive business data (for example, training exports, HR files, privileged hashes, and golden-ticket material) and are placed on each machine.\n\nYour long-term objective is to obtain Domain Admin in **academy.ninja.lan** and **ninja.hack** by following realistic attack paths."
     },
     {
-      "title": "Get Access",
+      "title": "Get Access to Kali",
       "level_type": "ACCESS_LEVEL",
       "order": 1,
       "estimated_duration": 0,
       "minimal_possible_solve_time": null,
-      "passkey": "start",
-      "cloud_content": "Your first task is to access the Kali Linux sandbox.\n\n### Sandbox Access\n1. In the topology overview on the right, right-click on **kali**\n2. Click **Open console**\n3. Login with username **user** and password **Password123**\n4. You should see a terminal prompt\n\nOnce you have successfully accessed the terminal, submit the answer **start**.",
+      "passkey": "nha-lab-start",
+      "cloud_content": "You begin with VPN access into the Academy segment, but you do not have any valid domain credentials.\n\n### Sandbox Access\n1. In the topology overview, right-click on **kali-nha**.\n2. Click **Open console**.\n3. Login with username **kali** and password **KaliNHA123!** (or as instructed by your trainer).\n4. Confirm you see a prompt similar to `kali@kali-nha:~$`.\n\nOnce you have successfully accessed the terminal, submit the answer **nha-lab-start**.",
       "local_content": "This sandbox has not been configured for local use."
     },
     {
-      "title": "System Discovery",
+      "title": "Network Recon – Hosts and Services",
       "level_type": "TRAINING_LEVEL",
       "order": 2,
-      "estimated_duration": 5,
-      "minimal_possible_solve_time": 1,
-      "answer": "kali",
+      "estimated_duration": 15,
+      "minimal_possible_solve_time": 3,
+      "answer": "NHA{RECON_6_WINDOWS_ASSETS_10_2_10}",
       "answer_variable_name": null,
-      "content": "Let's start by exploring your Kali system. Every Linux system has a hostname that identifies it on the network.\n\nYour task is to find the **hostname** of your Kali machine using the command line. Submit the hostname as your answer.\n",
-      "solution": "1. Use the command **`hostname`** to display the system's hostname\n2. The output should be **kali**\n3. Submit **kali** as your answer",
+      "content": "Start by understanding the attack surface in the **10.2.10.0/23** segment.\n\nYou will perform a two-phase Nmap reconnaissance to identify listening services and enumerate the key Windows assets, including a Windows 11 workstation.\n\n### Task\n1. From your Kali terminal, run a full TCP port sweep for the entire subnet and store all discovered ports in a variable:\n   ``````\n2. Use the port list to run a service and version detection scan:\n   ``````\n3. From the results, identify systems that appear to be:\n   - Domain controllers (Kerberos, LDAP, Global Catalog, WinRM, RDP).\n   - Web server (IIS on port 80/443 with the Academy site).\n   - SQL Server (MSSQL on port 1433 and possibly a high ephemeral port).\n   - File or application server (SMB shares, RDP).\n   - Windows 11 workstation at **10.2.10.21**.\n4. Count how many **Windows systems** are reachable in total (including the Windows 11 workstation). There should be **6** such assets.\n5. When you have confirmed this, submit the flag:\n\n`NHA{RECON_6_WINDOWS_ASSETS_10_2_10}`",
+      "solution": "1. Run the two-step Nmap scan:\n   ``````\n2. Review the output and look for Microsoft Windows banners, MSSQL signatures, IIS, SMB, and RDP.\n3. Identify at least the following as Windows:\n   - 10.2.10.21 – Windows 11 workstation (workstation-like ports and OS fingerprint).\n   - 10.2.10.30 – Domain controller (Kerberos, LDAP, RDP, WinRM).\n   - 10.2.10.31 – Domain controller (Kerberos, LDAP, RDP, WinRM).\n   - 10.2.10.32 – IIS web server.\n   - 10.2.10.33 – MSSQL server.\n   - 10.2.10.34 – file/application server.\n4. Count: 6 Windows assets.\n5. Submit `NHA{RECON_6_WINDOWS_ASSETS_10_2_10}`.",
       "solution_penalized": true,
       "hints": [
         {
-          "title": "Basic Linux command",
-          "content": "There is a simple command called **hostname** that displays the system's network name. Try running it in your terminal.",
-          "hint_penalty": 10,
-          "order": 0
+          "title": "Focus on OS fingerprints",
+          "content": "Use the service and version output to distinguish Windows servers and workstations from potential network devices or other OS types."
         }
       ],
       "incorrect_answer_limit": 10,
@@ -51,26 +53,24 @@
       "max_score": 100,
       "variant_answers": false,
       "reference_solution": [],
-      "expected_commands": ["hostname"],
+      "expected_commands": ["nmap"],
       "commands_required": true
     },
     {
-      "title": "Network Tools",
+      "title": "Domain and Role Mapping",
       "level_type": "TRAINING_LEVEL",
       "order": 3,
-      "estimated_duration": 10,
-      "minimal_possible_solve_time": 2,
-      "answer": "10.1.27.1",
+      "estimated_duration": 15,
+      "minimal_possible_solve_time": 3,
+      "answer": "NHA{NINJA_HACK_AND_ACADEMY_MAPPED}",
       "answer_variable_name": null,
-      "content": "Kali Linux comes with many pre-installed security tools. Let's explore your network configuration.\n\nYour Kali machine is on the **10.1.27.0/24** network. Use the **ip route** command to find your default gateway IP address. Submit the gateway IP as your answer.\n",
-      "solution": "1. Run **`ip route`** or **`ip route show`**\n2. Look for the line starting with **default via**\n3. The gateway IP is **10.1.27.1**\n4. Submit **10.1.27.1** as your answer",
+      "content": "Next, align technical findings with business context by mapping domains and host roles.\n\nWithin the 10.2.10.0/23 segment, you should be able to deduce:\n\n- **ninja.hack** – corporate forest rooted at `dc01.ninja.hack` on **10.2.10.30**.\n- **academy.ninja.lan** – training forest rooted at `dc02.academy.ninja.lan` on **10.2.10.31**.\n- **web.academy.ninja.lan** on **10.2.10.32** – public-facing web application for the Academy.\n- **sql.academy.ninja.lan** on **10.2.10.33** – SQL Server 2019 backing the Academy portal and reporting.\n- **share.academy.ninja.lan** on **10.2.10.34** – file/application server holding course material and internal documents.\n- **10.2.10.21** – Windows 11 workstation used by an Academy staff member, potentially with cached credentials and mapped drives.\n\n### Task\n1. Use your Nmap results to identify:\n   - Which hosts expose AD-related ports (88, 389, 636, 3268, 3269) and appear to be domain controllers.\n   - Which host runs IIS and presents the Academy web application.\n   - Which host runs MSSQL (look for `ms-sql-s` and SQL Server version information).\n2. Infer FQDNs and roles so that each of the following is mapped:\n   - `dc01.ninja.hack` → 10.2.10.30.\n   - `dc02.academy.ninja.lan` → 10.2.10.31.\n   - `web.academy.ninja.lan` → 10.2.10.32.\n   - `sql.academy.ninja.lan` → 10.2.10.33.\n   - `share.academy.ninja.lan` → 10.2.10.34.\n3. Once you have a clear mental model of both forests and their key servers, submit the flag:\n\n`NHA{NINJA_HACK_AND_ACADEMY_MAPPED}`",
+      "solution": "1. Domain controllers are identified by the presence of Kerberos and LDAP ports and AD-specific banners. Map them as:\n   - 10.2.10.30 → dc01.ninja.hack.\n   - 10.2.10.31 → dc02.academy.ninja.lan.\n2. The IIS web server running the Academy site is at 10.2.10.32 → web.academy.ninja.lan.\n3. The MSSQL server is at 10.2.10.33 → sql.academy.ninja.lan.\n4. The remaining server with SMB and RDP that looks like a content/file server is at 10.2.10.34 → share.academy.ninja.lan.\n5. 10.2.10.21 is the Windows 11 workstation, which you should treat as a potential lateral-movement and data-exfiltration hop later in the engagement.\n6. Submit `NHA{NINJA_HACK_AND_ACADEMY_MAPPED}`.",
       "solution_penalized": true,
       "hints": [
         {
-          "title": "Finding the gateway",
-          "content": "Use **`ip route`** to display routing information. Look for the line that says 'default via' - this shows your gateway address.",
-          "hint_penalty": 20,
-          "order": 0
+          "title": "Start from the DCs",
+          "content": "Identify domain controllers first using Kerberos/LDAP. Once you know which IPs are DCs, it becomes easier to infer which servers belong to which forest."
         }
       ],
       "incorrect_answer_limit": 10,
@@ -78,36 +78,136 @@
       "max_score": 100,
       "variant_answers": false,
       "reference_solution": [],
-      "expected_commands": ["ip"],
-      "commands_required": true
+      "expected_commands": ["nmap"],
+      "commands_required": false
     },
     {
-      "title": "Knowledge Check",
-      "level_type": "ASSESSMENT_LEVEL",
+      "title": "Configure FQDN and Kerberos",
+      "level_type": "TRAINING_LEVEL",
       "order": 4,
-      "estimated_duration": 5,
+      "estimated_duration": 20,
+      "minimal_possible_solve_time": 3,
+      "answer": "NHA{FQDN_DNSMASQ_KERBEROS_READY}",
+      "answer_variable_name": null,
+      "content": "To operate effectively in a multi-forest environment, configure local DNS resolution and a Kerberos client on Kali.\n\nYou will use dnsmasq to resolve the lab hostnames and prepare for Kerberos-based enumeration and attacks.\n\n### Task\n1. Edit `/etc/hosts` and add mappings for all core hosts:\n   ``````\n2. Install and configure dnsmasq as a simple local DNS forwarder:\n   ``````\n3. Verify resolution from Kali:\n   ``````\n4. Install the Kerberos client and configure realms for both AD forests in `/etc/krb5.conf` (for example, define `ACADEMY.NINJA.LAN` with KDC at dc02 and `NINJA.HACK` with KDC at dc01).\n5. Once FQDN resolution and Kerberos configuration are working, submit:\n\n`NHA{FQDN_DNSMASQ_KERBEROS_READY}`",
+      "solution": "1. Populate `/etc/hosts` with the full set of hosts, using the 10.2.10.x IPs and the chosen FQDNs.\n2. Install dnsmasq and point your resolver at 127.0.0.1:\n   ``````\n3. Use the `host` command to ensure each hostname resolves to the expected IP.\n4. Install Kerberos support and add realms for ACADEMY.NINJA.LAN and NINJA.HACK in `/etc/krb5.conf`, specifying dc02 and dc01 as the respective KDCs.\n5. Submit `NHA{FQDN_DNSMASQ_KERBEROS_READY}`.",
+      "solution_penalized": true,
+      "hints": [
+        {
+          "title": "Verify name resolution first",
+          "content": "Before adjusting Kerberos, make sure all FQDNs resolve correctly with the `host` command. Kerberos will fail silently if names do not match what the DCs expect."
+        }
+      ],
+      "incorrect_answer_limit": 10,
+      "attachments": [],
+      "max_score": 100,
+      "variant_answers": false,
+      "reference_solution": [],
+      "expected_commands": ["dnsmasq", "host"],
+      "commands_required": false
+    },
+    {
+      "title": "Identify Entry Points and High-Value Targets",
+      "level_type": "TRAINING_LEVEL",
+      "order": 5,
+      "estimated_duration": 20,
+      "minimal_possible_solve_time": 5,
+      "answer": "NHA{PRIMARY_ENTRY_WEB_SECONDARY_WIN11}",
+      "answer_variable_name": null,
+      "content": "Your next step is to think like an adversary and identify realistic entry points and high-value targets.\n\nConsider the following:\n- The web application on `web.academy.ninja.lan` (10.2.10.32) is exposed to trainees and potentially reachable from outside.\n- The SQL backend on `sql.academy.ninja.lan` (10.2.10.33) likely stores credentials, session data, and training records.\n- The Windows 11 workstation at 10.2.10.21 belongs to an Academy staff member and may have:\n  - Cached credentials.\n  - Mapped shares to `share.academy.ninja.lan`.\n  - Access to applications that integrate with the corporate forest.\n\n### Task\n1. Review the ports and services exposed on `web.academy.ninja.lan`, `sql.academy.ninja.lan`, and the Windows 11 workstation.\n2. Decide which host would be the **primary technical entry point** for an external attacker and which host would be a **secondary target** for credential theft and lateral movement.\n3. When you are satisfied with your reasoning, submit:\n\n`NHA{PRIMARY_ENTRY_WEB_SECONDARY_WIN11}`\n\nThis flag asserts that you have identified the Academy web application as the primary entry point and the Windows 11 workstation as an important secondary target.",
+      "solution": "1. The Academy web application is exposed on IIS at 10.2.10.32 and is explicitly designed for user interaction, making it the most realistic primary entry point.\n2. The Windows 11 workstation at 10.2.10.21 is a natural secondary target because a staff user is likely logged in regularly, with access to mapped drives and potentially both forests.\n3. Submit `NHA{PRIMARY_ENTRY_WEB_SECONDARY_WIN11}`.",
+      "solution_penalized": true,
+      "hints": [
+        {
+          "title": "Think about exposure and trust",
+          "content": "Ask which systems accept untrusted input (like HTTP requests) and which systems are likely to hold user tokens, cached credentials, or mapped shares."
+        }
+      ],
+      "incorrect_answer_limit": 10,
+      "attachments": [],
+      "max_score": 100,
+      "variant_answers": false,
+      "reference_solution": [],
+      "expected_commands": [],
+      "commands_required": false
+    },
+    {
+      "title": "Knowledge Check – Scenario Understanding",
+      "level_type": "ASSESSMENT_LEVEL",
+      "order": 6,
+      "estimated_duration": 10,
       "minimal_possible_solve_time": null,
       "questions": [
         {
           "question_type": "MCQ",
-          "text": "What is the primary purpose of Kali Linux?",
+          "text": "What is the primary business role of the academy.ninja.lan forest?",
           "points": 100,
           "penalty": 0,
           "order": 0,
           "answer_required": true,
           "choices": [
             {
-              "text": "Web development",
+              "text": "Hosting the corporate finance and HR systems.",
               "correct": false,
               "order": 0
             },
             {
-              "text": "Penetration testing and security auditing",
+              "text": "Serving as an internal training and lab environment for students and junior staff.",
               "correct": true,
               "order": 1
             },
             {
-              "text": "Gaming",
+              "text": "Running public e-commerce services for external customers.",
+              "correct": false,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "question_type": "MCQ",
+          "text": "Which host is the most realistic initial technical entry point for an attacker?",
+          "points": 100,
+          "penalty": 0,
+          "order": 1,
+          "answer_required": true,
+          "choices": [
+            {
+              "text": "dc01.ninja.hack (10.2.10.30)",
+              "correct": false,
+              "order": 0
+            },
+            {
+              "text": "web.academy.ninja.lan (10.2.10.32)",
+              "correct": true,
+              "order": 1
+            },
+            {
+              "text": "share.academy.ninja.lan (10.2.10.34)",
+              "correct": false,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "question_type": "MCQ",
+          "text": "Why is the Windows 11 workstation at 10.2.10.21 considered a high-value secondary target?",
+          "points": 100,
+          "penalty": 0,
+          "order": 2,
+          "answer_required": true,
+          "choices": [
+            {
+              "text": "It hosts the only copy of the company website.",
+              "correct": false,
+              "order": 0
+            },
+            {
+              "text": "It is likely used interactively by staff, with cached credentials, mapped shares, and access to internal applications.",
+              "correct": true,
+              "order": 1
+            },
+            {
+              "text": "It is an unmanaged Linux system on the edge of the network.",
               "correct": false,
               "order": 2
             }
@@ -115,10 +215,10 @@
         },
         {
           "question_type": "FFQ",
-          "text": "What did you find most interesting about Kali Linux?",
+          "text": "In 2–3 sentences, describe a plausible high-level attack path from the web.academy.ninja.lan portal to Domain Admin in ninja.hack.",
           "points": 0,
           "penalty": 0,
-          "order": 1,
+          "order": 3,
           "answer_required": false,
           "choices": [
             {
@@ -129,10 +229,8 @@
           ]
         }
       ],
-      "instructions": "Answer these questions to complete the training.",
+      "instructions": "Answer these questions to confirm your understanding of the Ninja Hacker Academy enterprise scenario and its realistic attack surface.",
       "assessment_type": "QUESTIONNAIRE"
     }
-  ],
-  "estimated_duration": 30,
-  "variant_sandboxes": false
+  ]
 }
